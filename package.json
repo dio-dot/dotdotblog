@@ -1,0 +1,45 @@
+{
+  "name": "dotdot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "next ./client/",
+    "build": "next build ./client/ ",
+    "start": "next ./client/ start",
+    "server": "nodemon --ext ts --watch server --exec ts-node --project ./server/tsconfig.json ./server/app.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.6",
+    "@types/multer": "^1.4.3",
+    "@types/react": "^16.9.35",
+    "@types/react-dom": "^16.9.8",
+    "@types/sequelize": "^4.28.8",
+    "@types/styled-components": "^5.1.0",
+    "nodemon": "^2.0.3",
+    "ts-node": "^8.10.1",
+    "typescript": "^3.8.3"
+  },
+  "dependencies": {
+    "apollo-server-express": "^2.13.1",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "graphql-relay": "^0.6.0",
+    "graphql-sequelize": "^9.4.0",
+    "graphql-tools": "^5.0.0",
+    "merge-graphql-schemas": "^1.7.8",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.2",
+    "mysql2": "^2.1.0",
+    "next": "^9.4.0",
+    "path": "^0.12.7",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "reflect-metadata": "^0.1.13",
+    "sequelize": "^5.21.8",
+    "sequelize-typescript": "^1.1.0"
+  }
+}

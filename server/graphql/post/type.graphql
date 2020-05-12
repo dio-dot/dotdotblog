@@ -1,0 +1,45 @@
+scalar Date
+scalar Void
+
+type Tag {
+  id: String
+  tag: String
+}
+
+type Post {
+  id: String
+  title: String
+  content: String
+  description: String
+  thumbnail: String
+  is_temp: Boolean
+  is_open: Boolean
+  tags: [Tag]
+  category: Category
+  createdAt: Date
+}
+
+input PostInput {
+  id: String
+  title: String!
+  category_id: String!
+  content: String!
+  description: String!
+  thumbnail: String!
+  is_temp: Boolean
+  is_open: Boolean
+  tags: [String]
+}
+
+type Query {
+  getPost(title: String!): Post
+  getPosts: [Post]
+  getPostsByTag(tag: String!, createdAt: String): [Post]
+  getPostsByCategory(category: String!, createdAt: String): [Post]
+}
+
+type Mutation {
+  createPost(data: PostInput!): Void
+  deletePost(id: String!): Void
+  editPost(data: PostInput!): Void
+}

@@ -1,0 +1,8 @@
+type Category {
+  id: String
+  category: String
+}
+
+type Mutation {
+  createCategory(category: String!): Void
+}
