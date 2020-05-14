@@ -34,7 +34,10 @@ export class Post extends Model<Post> {
 
   @ForeignKey(() => Category)
   category_id: string;
-  @BelongsToMany(() => Tag, () => PostTag)
+  @BelongsToMany(
+    () => Tag,
+    () => PostTag
+  )
   tags: Tag[];
   @BelongsTo(() => Category)
   category: Category;
@@ -57,26 +60,26 @@ export class Post extends Model<Post> {
   }
 }
 
-export type PostModel = {
-  id: string;
-  title: string;
-  content: string;
-  description: string;
-  thumbnail: string;
-  is_temp: boolean;
-  is_open: boolean;
-  tags?: [TagModel];
-  category?: CategoryModel;
-};
+// export type PostModel = {
+//   id: string;
+//   title: string;
+//   content: string;
+//   description: string;
+//   thumbnail: string;
+//   is_temp: boolean;
+//   is_open: boolean;
+//   tags?: [TagModel];
+//   category?: CategoryModel;
+// };
 
-export type TagModel = {
-  id: string;
-  tag: string;
-  posts?: [PostModel];
-};
+// export type TagModel = {
+//   id: string;
+//   tag: string;
+//   posts?: [PostModel];
+// };
 
-export type CategoryModel = {
-  id: string;
-  category: string;
-  posts?: [PostModel];
-};
+// export type CategoryModel = {
+//   id: string;
+//   category: string;
+//   posts?: [PostModel];
+// };

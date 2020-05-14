@@ -39,7 +39,7 @@ type Query {
 }
 
 type Mutation {
-  createPost(data: PostInput!): Void
-  deletePost(id: String!): Void
-  editPost(data: PostInput!): Void
+  createPost(data: PostInput!): Void @isAuth
+  deletePost(id: String!): Void @isAuth
+  editPost(data: PostInput!): Void @isAuth
 }

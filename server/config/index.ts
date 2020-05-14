@@ -14,4 +14,7 @@ export const ENV = {
   DB_USER: process.env.DB_USER || "root",
   DB_PASSWORD: process.env.DB_PASSWORD || "root",
   DB_DIALECT: process.env.DB_DIALECT || "mysql",
+
+  JWT_ENCRYPTION: process.env.JWT_ENCRYPTION || "encryption",
+  JWT_EXPIRATION: process.env.JWT_EXPIRATION || "1d",
 };
