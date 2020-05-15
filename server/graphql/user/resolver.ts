@@ -4,8 +4,9 @@ export default {
   Query: {
     getUser: resolver(User, {
       before: async (findOptions, {}, { user, authUser }) => {
-        console.log(user, authUser);
-        // findOptions.where = { id: user.id };
+        if (authUser) {
+          findOptions.where = { id: user.id };
+        }
         return findOptions;
       },
       after: (res) => {

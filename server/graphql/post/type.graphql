@@ -15,7 +15,7 @@ type Post {
   is_temp: Boolean
   is_open: Boolean
   tags: [Tag]
-  category: Category
+  category: String
   createdAt: Date
 }
 

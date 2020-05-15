@@ -1,7 +1,8 @@
 type User {
   id: String
   email: String
-  jwt: String
+  type: String
+  jwt: String @isAuthUser
 }
 
 input UserInput {

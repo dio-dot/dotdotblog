@@ -18,7 +18,7 @@ export class User extends Model<User> {
   })
   id: string;
 
-  @Column({ type: DataType.STRING })
+  @Column({ type: DataType.STRING, unique: true })
   email: string;
 
   @Column({ type: DataType.STRING })

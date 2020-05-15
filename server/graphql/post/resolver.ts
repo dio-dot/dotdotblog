@@ -98,6 +98,10 @@ export default {
   },
   Post: {
     tags: resolver(Post.associations.tags),
-    category: resolver(Post.associations.category),
+    category: resolver(Post.associations.category, {
+      after: (res) => {
+        return res.category;
+      },
+    }),
   },
 };

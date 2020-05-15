@@ -5,8 +5,8 @@ export default {
   Mutation: {
     createCategory: async (parent, { category }) => {
       try {
-        await Category.create({ category });
-        return true;
+        let res = await Category.create({ category });
+        return res;
       } catch (error) {
         console.error(error);
         return false;
