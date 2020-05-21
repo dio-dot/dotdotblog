@@ -3,6 +3,7 @@ import { ENV } from "./config";
 import next from "next";
 import morgan from "morgan";
 import jwt from "express-jwt";
+import cors from "cors";
 
 import { ApolloServer } from "apollo-server-express";
 import { sequelize } from "./database";
@@ -32,6 +33,12 @@ nextServer.prepare().then(() => {
   const app = express();
   /** middleware */
   app.use(jwtMiddleware);
+  app.use(
+    cors({
+      origin: "http://localhost:3000",
+      credentials: true, // <-- REQUIRED backend setting
+    })
+  );
   app.use(morgan("dev"));
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));

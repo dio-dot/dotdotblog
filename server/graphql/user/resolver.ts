@@ -1,5 +1,6 @@
 import { User } from "../../database/model/user";
 import { resolver } from "graphql-sequelize";
+import { to } from "await-to-js";
 export default {
   Query: {
     getUser: resolver(User, {
@@ -15,13 +16,18 @@ export default {
     }),
     loginUser: resolver(User, {
       before: async (findOptions, { email }) => {
+        console.log(email);
         findOptions.where = { email };
         return findOptions;
       },
       after: async (user: User, { password }) => {
-        user = await user.comparePassword(password);
-        user.is_login = true;
-        return user;
+        let [err, res] = await to(user.comparePassword(password));
+        if (err) {
+          return err;
+        } else {
+          user.is_login = true;
+          return user;
+        }
       },
     }),
   },

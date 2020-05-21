@@ -1,140 +1,217 @@
 import { NextPage, NextComponentType } from "next";
 import Link from "next/link";
-import { Menu as antMenu, Input } from "antd";
-import { GithubOutlined, MailOutlined } from "@ant-design/icons";
-import styled from "styled-components";
-
-interface AppLayoutProps {
-  chidren: NextPage;
-}
-const color = {
-  primary: "#00000045",
-  primaryContrast: "#8c8c8c",
-  secondary: "#555555",
-  secondaryContrast: "#333333",
-  border: "#e1e4e8",
-};
-
+import { Menu as AntMenu, Button, Input, Modal as AntModal, Form, Checkbox } from 'antd';
+import styled from 'styled-components';
+import { GithubOutlined, MailOutlined, KeyOutlined, UserOutlined, LockOutlined } from "@ant-design/icons";
+import { useState, useCallback } from "react";
+import LoginForm from "./login";
+import { useLazyQuery } from "@apollo/react-hooks";
+import gql from "graphql-tag";
 const Layout = styled.div`
-  display: flex;
-  height: 100vh;
-`;
-const LeftPane = styled.div`
-  flex: 0 1 200px;
-  border-right: none;
-  box-shadow: 1px 0px 3px #00000045;
-`;
+  min-height:100%;
+  position:relative;
+`
+const Header = styled.div`
+width:200px;
+height:100vh;
+position: fixed;
+border-right: 1px solid #f0f0f0;
+display: flex;
+    flex-direction: column;
+`
+const Menu = styled(AntMenu)`
+border:none;
+flex:1 1 auto;
+.ant-menu-item-group-title{
+  font-weight:600;
+  font-size:13px;
+  ::after{
+    position: relative;
+    top: 6px;
+    display: block;
+    width: 100%;
+    height: 1px;
+    background: #f3f3f3;
+    content: '';
+  }
+}
+.ant-menu-item {
+  font-weight:600;
+  font-size:15px;
+  a:hover {
+    color:#ff0050;
+  }
+  ::after{
+    // border-right:5px solid #ff0050;
+    border-right:none;
+  }
+  &.ant-menu-item-selected{
+    a{
+      color:#ff0050;
+    }
+    background-color: #f3f3f3;
+  }
+}
+
+`
+const Content = styled.div`
+  padding-left:201px;
+  overflow:auto;
+`
+
 const Profile = styled.div`
-  padding: 20px;
+  padding: 20px 0px 10px 0px;
 `;
 const ProfileItme = styled.div`
   display: flex;
   justify-content: center;
+  font-size:20px;
+  a{
+    margin-top:5px;
+    color: #f0f0f0;
+  }
 `;
 const Search = styled.div`
   padding: 5px 10px;
 `;
-const IconButton = styled.a`
-  color: ${color.primary};
-  //@ts-ignore
-  font-size: ${(props) => (props.size ? props.size : "20px")};
-  &:hover {
-    color: ${color.primaryContrast};
+
+const Login = styled.div`
+  padding: 5px 10px;
+`
+const Modal = styled(AntModal)`
+
+`
+const PageLayout = styled.div`
+  padding:10px;
+`
+
+interface AppLayoutProps {
+  chidren: NextPage;
+}
+
+const LOGIN_USER = gql`
+query loginUser($email:String!,$password:String!) {
+  loginUser(email:$email,password:$password){
+    id
+    email
+    type
+    jwt
   }
-`;
-const Menu = styled(antMenu)`
-  border-right: 0px;
-`;
-const Item = styled(antMenu.Item)`
-  &.ant-menu-item {
-    background-color: transparent !important;
-  }
-  &.ant-menu-item {
-    ::after {
-      border-right: 3px solid #f48024;
-    }
-    a {
-      color: rgba(0, 0, 0, 0.65);
-      :hover {
-        color: #ff6b6b;
-      }
-    }
-  }
-`;
-const RigthPane = styled.div`
-  flex: 1 1 auto;
-  padding: 10px;
-`;
+}
+`
 
 const AppLayout: NextComponentType<AppLayoutProps> = ({ children }) => {
+  const [visibleLoginForm, setVisibleLoginForm] = useState<boolean>(false);
+  const [loginUserQuery, { data, error, loading }] = useLazyQuery(LOGIN_USER)
+  const onSubmitLoginForm = useCallback((values) => {
+    loginUserQuery(
+      {
+        variables: values
+      }
+    )
+    setVisibleLoginForm(false);
+  }, []);
+  const onCancelLoginForm = useCallback((visible) => {
+    setVisibleLoginForm(visible);
+  }, []);
+  let user;
+  if (data) {
+    user = data.loginUser;
+  }
+  if (error) {
+    console.log(error);
+  }
   return (
     <Layout>
-      <LeftPane>
+      {
+        visibleLoginForm && (
+          < LoginForm
+            visible={visibleLoginForm}
+            onCancelLoginForm={onCancelLoginForm}
+            onSubmitLoginForm={onSubmitLoginForm}
+          />
+        )
+      }
+      <Header>
         <Profile>
           <ProfileItme>
             <img src="https://via.placeholder.com/100x100" />
           </ProfileItme>
           <ProfileItme>
-            <IconButton href="https://github.com/dio-dot" target="_blank">
+            <a href="https://github.com/dio-dot" target="_blank">
               <GithubOutlined />
-            </IconButton>
+            </a>
           </ProfileItme>
         </Profile>
         <Search>
           <Input.Search />
         </Search>
-        <Menu mode="horizontal">
-          <Menu.ItemGroup key="1" title="Diodot">
-            <Item key="/log">
+        <Menu mode="inline">
+          <Menu.ItemGroup title="Diodot">
+            <Menu.Item key="log">
               <Link
                 href={{
                   pathname: "/category",
-                  query: { name: "Log" },
+                  query: { name: "log" },
                 }}
                 as="/log"
               >
                 <a>Log</a>
               </Link>
-            </Item>
+            </Menu.Item>
           </Menu.ItemGroup>
-          <Menu.ItemGroup key="2" title="Dev">
-            <Item key="/algorithm">
+          <Menu.ItemGroup title="Dev">
+            <Menu.Item key="javascript">
               <Link
                 href={{
                   pathname: "/category",
-                  query: { name: "Algorithm" },
+                  query: { name: "javascript" },
                 }}
-                as="/algorithm"
+                as="/javascript"
               >
-                <a>Algorithm</a>
+                <a>Javascript</a>
               </Link>
-            </Item>
-            <Item key="/react">
+            </Menu.Item>
+            <Menu.Item key="react">
               <Link
                 href={{
                   pathname: "/category",
-                  query: { name: "React" },
+                  query: { name: "react" },
                 }}
                 as="/react"
               >
                 <a>React</a>
               </Link>
-            </Item>
-            <Item key="/write">
-              <Link
-                href={{
-                  pathname: "/write",
-                }}
-                as="/write"
-              >
-                <a>Write</a>
-              </Link>
-            </Item>
+            </Menu.Item>
           </Menu.ItemGroup>
+          <Menu.Item key="write">
+            <Link
+              href={{
+                pathname: "/category",
+                query: { name: "write" },
+              }}
+              as="/write"
+            >
+              <a>Write</a>
+            </Link>
+          </Menu.Item>
         </Menu>
-      </LeftPane>
-      <RigthPane>{children}</RigthPane>
+        <Login>
+          {
+
+            (user) ? <Button block>LogOut</Button> :
+              <Button block onClick={() => onCancelLoginForm(true)}>Login</Button>
+          }
+        </Login>
+      </Header>
+
+      <Content>
+        <PageLayout>
+          {children}
+        </PageLayout>
+      </Content>
     </Layout>
+
   );
 };
 

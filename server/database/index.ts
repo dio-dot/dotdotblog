@@ -8,9 +8,9 @@ export { PostTag } from "./model/posttag";
 export const sequelize = new Sequelize({
   dialect: "mysql",
   host: ENV.DB_HOST,
-  database: "dotdot",
+  database: ENV.DB_NAME,
   username: ENV.DB_USER,
-  password: "spot0910!",
+  password: ENV.DB_PASSWORD,
   port: +ENV.DB_PORT,
   logging: false,
   storage: ":memory:",

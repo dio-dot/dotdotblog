@@ -8,6 +8,7 @@ import "react-quill/dist/quill.snow.css";
 import "highlight.js/styles/darcula.css";
 /** component */
 import AppLayout from "../components/layout";
+import { withApollo } from "../lib/apollo";
 
 const MyApp = ({ Component }: AppPropsType) => {
   return (
@@ -23,4 +24,4 @@ const MyApp = ({ Component }: AppPropsType) => {
   );
 };
 
-export default MyApp;
+export default withApollo(MyApp);

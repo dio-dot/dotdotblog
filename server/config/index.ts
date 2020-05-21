@@ -1,5 +1,4 @@
 import * as dotEnv from "dotenv";
-import { Dialect } from "sequelize/types";
 
 dotEnv.config();
 
