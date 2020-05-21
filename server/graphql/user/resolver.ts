@@ -18,13 +18,19 @@ export default {
       before: async (findOptions, { email }) => {
         console.log(email);
         findOptions.where = { email };
+
         return findOptions;
       },
-      after: async (user: User, { password }) => {
-        let [err, res] = await to(user.comparePassword(password));
+      after: async (user: User, { password }, { res }) => {
+        let [err, result] = await to(user.comparePassword(password));
         if (err) {
           return err;
         } else {
+          res.cookie("token", user.getJwt().split(" ")[1], {
+            httpOnly: true,
+            secure: false,
+            maxAge: 1000 * 60 * 60 * 24,
+          });
           user.is_login = true;
           return user;
         }
@@ -32,10 +38,11 @@ export default {
     }),
   },
   Mutation: {
-    createUser: async (parent, { data }) => {
+    createUser: async (parent, { data }, { res }) => {
       try {
         let user = await User.create(data);
         user.is_login = true;
+
         return user;
       } catch (error) {
         return false;
