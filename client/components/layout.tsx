@@ -16,10 +16,12 @@ import {
   UserOutlined,
   LockOutlined,
 } from "@ant-design/icons";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import LoginForm from "./login";
 import { useLazyQuery } from "@apollo/react-hooks";
 import gql from "graphql-tag";
+import { useAuth } from "../lib/auth";
+// import UseAuth from "../hooks/useAuth";
 const Layout = styled.div`
   min-height: 100%;
   position: relative;
@@ -112,26 +114,28 @@ const LOGIN_USER = gql`
 
 const AppLayout: NextComponentType<AppLayoutProps> = ({ children }) => {
   const [visibleLoginForm, setVisibleLoginForm] = useState<boolean>(false);
-  const [loginUserQuery, { data, error, loading }] = useLazyQuery(LOGIN_USER);
-  const onSubmitLoginForm = useCallback((values) => {
-    loginUserQuery({
-      variables: values,
-    });
-    setVisibleLoginForm(false);
+  const { user, signIn } = useAuth();
+  // const [loginUserQuery, { data, error, loading }] = useLazyQuery(LOGIN_USER);
+  // const onSubmitLoginForm = useCallback((values) => {
+  //   loginUserQuery({
+  //     variables: values,
+  //   });
+  //   setVisibleLoginForm(false);
+  // }, []);
+  useEffect(() => {
+    console.log("user", user);
+  }, [user]);
+
+  const onSubmitLoginForm = useCallback((value) => {
+    console.log(value);
+    signIn(value.email, value.password);
   }, []);
   const onCancelLoginForm = useCallback((visible) => {
     setVisibleLoginForm(visible);
   }, []);
-  let user;
-  if (data) {
-    user = data.loginUser;
-  }
-  if (error) {
-    console.log(error);
-  }
   return (
     <Layout>
-      {visibleLoginForm && (
+      {visibleLoginForm && !user && (
         <LoginForm
           visible={visibleLoginForm}
           onCancelLoginForm={onCancelLoginForm}
@@ -191,13 +195,7 @@ const AppLayout: NextComponentType<AppLayoutProps> = ({ children }) => {
             </Menu.Item>
           </Menu.ItemGroup>
           <Menu.Item key="write">
-            <Link
-              href={{
-                pathname: "/wite",
-                query: { name: "write" },
-              }}
-              as="/write"
-            >
+            <Link href="/write">
               <a>Write</a>
             </Link>
           </Menu.Item>

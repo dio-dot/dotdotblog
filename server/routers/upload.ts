@@ -7,7 +7,7 @@ const router: Router = express.Router();
 const imageUpload = multer({
   storage: multer.diskStorage({
     destination(req, file, done) {
-      done(null, "server/static/iamges");
+      done(null, "server/static/images");
     },
     filename(req, file, done) {
       const ext = path.extname(file.originalname);
